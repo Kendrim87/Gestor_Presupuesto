@@ -1,5 +1,5 @@
 // TODO: Variables globales
-
+let presupuesto = 0;
 
 // TODO: Funciones adicionales
 
