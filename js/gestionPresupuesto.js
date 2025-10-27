@@ -1,5 +1,7 @@
 // TODO: Variables globales
 let presupuesto = 0;
+let gastos = [];
+let idGasto = 0;
 
 // TODO: Funciones adicionales
 
@@ -48,9 +50,30 @@ class CrearGasto {
     }
 }
 
+function listarGastos() {
+}
+
+function anyadirGasto() {
+}
+
+function borrarGasto() {
+}
+
+function calcularTotalGastos() {
+}
+
+function calcularBalance() {
+}
+
+
 // Exportación de funciones
 export {
     mostrarPresupuesto,
     actualizarPresupuesto,
-    CrearGasto
+    CrearGasto,
+    listarGastos,
+    anyadirGasto,
+    borrarGasto,
+    calcularTotalGastos,
+    calcularBalance
 }
