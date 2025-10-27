@@ -51,6 +51,8 @@ class CrearGasto {
 }
 
 function listarGastos() {
+    // Devuelve el listado global de gastos
+    return gastos;
 }
 
 function anyadirGasto() {
