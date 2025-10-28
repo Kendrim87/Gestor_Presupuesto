@@ -70,7 +70,15 @@ function listarGastos() {
     return gastos;
 }
 
-function anyadirGasto() {
+function anyadirGasto(gasto) {
+    // Asignamos el id al gasto
+    gasto.id = idGasto;
+    
+    // Incrementamos el idGasto para el próximo gasto
+    idGasto++;
+    
+    // Añadimos el gasto al array
+    gastos.push(gasto);
 }
 
 function borrarGasto() {
