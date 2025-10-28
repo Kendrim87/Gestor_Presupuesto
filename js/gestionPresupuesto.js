@@ -63,6 +63,10 @@ class CrearGasto {
             this.valor = nuevoValor;
         }
     }
+    
+    anyadirEtiquetas(...etiquetas) {
+        // TODO: Implementar
+    }
 }
 
 function listarGastos() {
@@ -81,13 +85,30 @@ function anyadirGasto(gasto) {
     gastos.push(gasto);
 }
 
-function borrarGasto() {
+function borrarGasto(id) {
+    // Buscamos el gasto con el id proporcionado
+    for (let i = 0; i < gastos.length; i++) {
+        if (gastos[i].id === id) {
+            gastos.splice(i, 1);
+            break;
+        }
+    }
 }
 
 function calcularTotalGastos() {
+    // Recorremos el array de gastos y sumamos sus valores
+    let total = 0;
+    
+    for (let i = 0; i < gastos.length; i++) {
+        total += gastos[i].valor;
+    }
+    return total;
 }
 
 function calcularBalance() {
+    // Devuelve el presupuesto menos los gastos
+    let gastosTotales = calcularTotalGastos();
+    return presupuesto - gastosTotales;
 }
 
 
