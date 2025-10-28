@@ -25,14 +25,14 @@ class CrearGasto {
     constructor(descripcion, valor, fecha, ...etiquetas) {
         // Convertimos la descripción a cadena
         this.descripcion = String(descripcion);
-        
+
         // Validamos que el valor sea un número >= 0
         if (typeof valor === 'number' && valor >= 0 && !isNaN(valor)) {
             this.valor = valor;
         } else {
             this.valor = 0;
         }
-        
+
         // Array vacío de etiquetas
         this.etiquetas = [];
 
@@ -42,30 +42,71 @@ class CrearGasto {
         } else {
             this.fecha = Date.now();
         }
-        
+
         // Añadimos las etiquetas al array
         for (let etiqueta of etiquetas) {
             this.anyadirEtiquetas(etiqueta);
         }
     }
-    
+
     mostrarGasto() {
         return `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €`;
     }
-    
+
     actualizarDescripcion(nuevaDescripcion) {
         this.descripcion = nuevaDescripcion;
     }
-    
+
     actualizarValor(nuevoValor) {
         // Solo actualizamos si el valor es válido
         if (typeof nuevoValor === 'number' && nuevoValor >= 0 && !isNaN(nuevoValor)) {
             this.valor = nuevoValor;
         }
     }
-    
+
+    actualizarFecha(nuevaFecha) {
+        // Validamos que la fecha sea válida
+        let timestamp = Date.parse(nuevaFecha);
+        if (!isNaN(timestamp)) {
+            this.fecha = timestamp;
+        }
+    }
+
     anyadirEtiquetas(...etiquetas) {
-        // TODO: Implementar
+        // Recorremos las etiquetas y convertimos a String
+        for (let i = 0; i < etiquetas.length; i++) {
+            let etiquetaString = String(etiquetas[i]);
+
+            // Añadimos si no existe
+            if (!this.etiquetas.includes(etiquetaString)) {
+                this.etiquetas.push(etiquetaString);
+            }
+        }
+    }
+
+    borrarEtiquetas(...etiquetas) {
+        // Recorre el array y si la etiqueta existe, la elimina
+        for (let i = 0; i < etiquetas.length; i++) {
+
+            let etiquetaString = String(etiquetas[i]);
+            let indice = this.etiquetas.indexOf(etiquetaString);
+
+            if (indice >= 0) {
+                this.etiquetas.splice(indice, 1);
+            }
+        }
+    }
+
+    mostrarGastoCompleto() {
+        let texto = `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €.\n`;
+        let fechaFormateada = new Date(this.fecha).toLocaleString();
+        texto += `Fecha: ${fechaFormateada}\n`;
+        texto += `Etiquetas:\n`;
+
+        for (let i = 0; i < this.etiquetas.length; i++) {
+            texto += `- ${this.etiquetas[i]}\n`;
+        }
+        return texto;
     }
 }
 
@@ -77,10 +118,10 @@ function listarGastos() {
 function anyadirGasto(gasto) {
     // Asignamos el id al gasto
     gasto.id = idGasto;
-    
+
     // Incrementamos el idGasto para el próximo gasto
     idGasto++;
-    
+
     // Añadimos el gasto al array
     gastos.push(gasto);
 }
@@ -98,7 +139,7 @@ function borrarGasto(id) {
 function calcularTotalGastos() {
     // Recorremos el array de gastos y sumamos sus valores
     let total = 0;
-    
+
     for (let i = 0; i < gastos.length; i++) {
         total += gastos[i].valor;
     }
