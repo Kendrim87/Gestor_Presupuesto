@@ -22,7 +22,7 @@ function mostrarPresupuesto() {
 }
 
 class CrearGasto {
-    constructor(descripcion, valor) {
+    constructor(descripcion, valor, fecha, ...etiquetas) {
         // Convertimos la descripción a cadena
         this.descripcion = String(descripcion);
         
@@ -31,6 +31,21 @@ class CrearGasto {
             this.valor = valor;
         } else {
             this.valor = 0;
+        }
+        
+        // Array vacío de etiquetas
+        this.etiquetas = [];
+
+        // Procesamos la fecha
+        if (fecha && !isNaN(Date.parse(fecha))) {
+            this.fecha = Date.parse(fecha);
+        } else {
+            this.fecha = Date.now();
+        }
+        
+        // Añadimos las etiquetas al array
+        for (let etiqueta of etiquetas) {
+            this.anyadirEtiquetas(etiqueta);
         }
     }
     
@@ -51,7 +66,7 @@ class CrearGasto {
 }
 
 function listarGastos() {
-    // Devuelve el listado global de gastos
+    // Devuelve el listado de gastos
     return gastos;
 }
 
