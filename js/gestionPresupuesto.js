@@ -167,8 +167,65 @@ function calcularBalance() {
     return presupuesto - gastosTotales;
 }
 
-function filtrarGastos() {
+function filtrarGastos(filtros) {
+    // Utilizamos filter para devolver solo los gastos que cumplan todos los criterios
+    return gastos.filter(function (gasto) {
+        if (filtros.fechaDesde) {
+            let fechaDesde = Date.parse(filtros.fechaDesde);
+            if (gasto.fecha < fechaDesde) {
+                return false;
+            }
+        }
 
+        if (filtros.fechaHasta) {
+            let fechaHasta = Date.parse(filtros.fechaHasta);
+            if (gasto.fecha > fechaHasta) {
+                return false;
+            }
+        }
+
+        // Usamos undefined, ya que 0 es un valor válido
+        if (filtros.valorMinimo !== undefined) {
+            if (gasto.valor < filtros.valorMinimo) {
+                return false;
+            }
+        }
+
+        if (filtros.valorMaximo !== undefined) {
+            if (gasto.valor > filtros.valorMaximo) {
+                return false;
+            }
+        }
+
+        if (filtros.descripcionContiene) {
+            let descripcionGasto = gasto.descripcion.toLowerCase();
+            let textoBuscado = String(filtros.descripcionContiene).toLowerCase();
+            if (!descripcionGasto.includes(textoBuscado)) {
+                return false;
+            }
+        }
+
+        if (filtros.etiquetasTiene && filtros.etiquetasTiene.length > 0) {
+            let etiquetasGasto = gasto.etiquetas.map(function (etiqueta) {
+                return String(etiqueta).toLowerCase();
+            });
+
+            let etiquetasBuscadas = filtros.etiquetasTiene.map(function (etiqueta) {
+                return String(etiqueta).toLowerCase();
+            });
+
+            let coincidencias = etiquetasBuscadas.filter(function (etiquetaBuscada) {
+                return etiquetasGasto.includes(etiquetaBuscada);
+            });
+
+            if (coincidencias.length === 0) {
+                return false;
+            }
+        }
+
+        // Si pasa todos los filtros, devolvemos true
+        return true;
+    });
 }
 
 function agruparGastos() {
