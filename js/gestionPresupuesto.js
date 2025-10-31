@@ -228,8 +228,45 @@ function filtrarGastos(filtros) {
     });
 }
 
-function agruparGastos() {
+function agruparGastos(periodo = "mes", etiquetas = [], fechaDesde, fechaHasta) {
+    let periodosValidos = ["dia", "mes", "anyo"];
+    if (!periodosValidos.includes(periodo)) {
+        periodo = "mes";
+    }
 
+    let filtros = {};
+
+    if (etiquetas && etiquetas.length > 0) {
+        filtros.etiquetasTiene = etiquetas;
+    }
+
+    if (fechaDesde) {
+        filtros.fechaDesde = fechaDesde;
+    }
+
+    if (fechaHasta) {
+        filtros.fechaHasta = fechaHasta;
+    } else {
+        let ahora = new Date();
+        let anyo = ahora.getFullYear();
+        let mes = ('0' + (ahora.getMonth() + 1)).slice(-2);
+        let dia = ('0' + ahora.getDate()).slice(-2);
+        filtros.fechaHasta = `${anyo}-${mes}-${dia}`;
+    }
+
+    let gastosFiltrados = filtrarGastos(filtros);
+
+    return gastosFiltrados.reduce(function(acc, gasto) {
+        let periodoAgrupacion = gasto.obtenerPeriodoAgrupacion(periodo);
+        
+        if (acc[periodoAgrupacion] === undefined) {
+            acc[periodoAgrupacion] = 0;
+        }
+        
+        acc[periodoAgrupacion] += gasto.valor;
+        
+        return acc;
+    }, {});
 }
 
 
