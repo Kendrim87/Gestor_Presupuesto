@@ -108,6 +108,21 @@ class CrearGasto {
         }
         return texto;
     }
+
+    obtenerPeriodoAgrupacion(periodo) {
+        let fecha = new Date(this.fecha);
+        let anyo = fecha.getFullYear();
+        let mes = ('0' + (fecha.getMonth() + 1)).slice(-2);
+        let dia = ('0' + fecha.getDate()).slice(-2);
+
+        if (periodo === 'dia') {
+            return `${anyo}-${mes}-${dia}`;
+        } else if (periodo === 'mes') {
+            return `${anyo}-${mes}`;
+        } else if (periodo === 'anyo') {
+            return `${anyo}`;
+        }
+    }
 }
 
 function listarGastos() {
@@ -153,7 +168,7 @@ function calcularBalance() {
 }
 
 function filtrarGastos() {
-    
+
 }
 
 function agruparGastos() {
