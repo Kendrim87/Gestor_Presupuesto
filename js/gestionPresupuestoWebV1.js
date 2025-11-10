@@ -95,11 +95,72 @@ function manejadorForm(evento) {
 
     gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto(descripcion, valor, fecha, ...etiquetas));
 
-    console.log('Gasto añadido');
-    console.log('Lista actualizada:', gestionPresupuesto.listarGastos());
     //Limpiamos el formulario
     evento.target.reset();
+
+    // Actualizamos la visualización del listado y el total
+    mostrarListadoGastos();
+    actualizarTotalGastos();
 }
+
+// Función para actualizar el total de gastos
+function actualizarTotalGastos() {
+    let total = gestionPresupuesto.calcularTotalGastos();
+    divTotalGastos.textContent = total.toFixed(2) + ' €';
+}
+
+// Función para mostrar el listado de gastos
+function mostrarListadoGastos() {
+    divListadoGastos.innerHTML = '';
+
+    let gastos = gestionPresupuesto.listarGastos();
+
+    for (let gasto of gastos) {
+        let divGasto = document.createElement('div');
+        divGasto.className = 'gasto';
+
+        let divDescripcion = document.createElement('div');
+        divDescripcion.textContent = 'Descripción: ' + gasto.descripcion;
+
+        let divValor = document.createElement('div');
+        divValor.textContent = 'Importe: ' + gasto.valor.toFixed(2) + ' €';
+
+        let divFecha = document.createElement('div');
+        let fecha = new Date(gasto.fecha);
+        divFecha.textContent = 'Fecha: ' + fecha.toLocaleDateString();
+
+        let divEtiquetas = document.createElement('div');
+        if (gasto.etiquetas.length > 0) {
+            divEtiquetas.textContent = 'Etiquetas: ' + gasto.etiquetas.join(', ');
+        }
+
+        let botonBorrar = document.createElement('button');
+        botonBorrar.className = 'boton-borrar';
+        botonBorrar.textContent = 'Borrar';
+
+        botonBorrar.handleEvent = function() {
+            if (confirm('¿Estás seguro de que quieres borrar este gasto?')) {
+                gestionPresupuesto.borrarGasto(gasto.id);
+                mostrarListadoGastos();
+                actualizarTotalGastos();
+            }
+        };
+
+        botonBorrar.addEventListener('click', botonBorrar);
+
+        divGasto.append(divDescripcion, divValor, divFecha, divEtiquetas, botonBorrar);
+        divListadoGastos.append(divGasto);
+    }
+}
+
+// Añadimos más gastos de prueba
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Gasolina', 45.50, '2025-11-07', 'transporte', 'coche'));
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Pizzería', 32, '2025-11-06', 'comida', 'ocio'));
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Luz', 78.90, '2025-11-01', 'casa', 'energía'));
+
 
 // Llamamos a la función para crear el formulario al cargar la página
 crearFormulario();
+// Mostramos el listado inicial y el total
+mostrarListadoGastos();
+actualizarTotalGastos();
