@@ -15,12 +15,55 @@
 </head>
 <body>
 	<h1>Gestor de Presupuestos</h1>
+
+	<template id="template-gastos">
+		<style>
+			.gasto-item { border: 1px solid #ddd; padding: 10px; margin: 8px 0; border-radius: 6px; background: #fafafa; font-size: 14px; }
+			.gasto-item div { margin: 2px 0; }
+			.acciones { margin-top: 6px; }
+			button { padding: 4px 10px; border-radius: 4px; border: 1px solid #999; cursor: pointer; background: #f0f0f0; }
+			#boton-borrar { background: #d9534f; color: #fff; border: none; }
+			#boton-editar { background: #0275d8; color: #fff; border: none; }
+			#formulario-edicion { margin-top: 8px; padding: 8px; background: #fff; border: 1px solid #ccc; border-radius: 4px; }
+			#formulario-edicion label { display: block; margin-bottom: 6px; }
+			#formulario-edicion input { width: 100%; box-sizing: border-box; }
+			#boton-cancelar { background: #6c757d; color: #fff; border: none; margin-right: 6px; }
+			#boton-guardar { background: #5cb85c; color: #fff; border: none; }
+		</style>
+		<div class="gasto-item">
+			<div id="descripcion-gasto"></div>
+			<div id="valor-gasto"></div>
+			<div id="fecha-gasto"></div>
+			<div id="etiquetas-gasto"></div>
+			<div class="acciones">
+				<button id="boton-editar" type="button">Editar</button>
+				<button id="boton-borrar" type="button">Borrar</button>
+			</div>
+			<form id="formulario-edicion" hidden>
+				<label>Descripción:
+					<input id="editar-descripcion" type="text">
+				</label>
+				<label>Valor:
+					<input id="editar-valor" type="number" step="0.01">
+				</label>
+				<label>Fecha:
+					<input id="editar-fecha" type="date">
+				</label>
+				<label>Etiquetas (separadas por comas):
+					<input id="editar-etiquetas" type="text">
+				</label>
+				<button id="boton-cancelar" type="button">Cancelar</button>
+				<button id="boton-guardar" type="submit">Guardar</button>
+			</form>
+		</div>
+	</template>
+
     <h3>Total de gastos</h3>
 	<div id="total-gastos"></div>
     <h3>Añadir nuevo gasto</h3>
 	<div id="formulario-gasto"></div>
     <h3>Listado de gastos</h3>
 	<div id="listado-gastos"></div>
-	<script type="module" src="js/gestionPresupuestoWebV1.js"></script>
+	<script type="module" src="js/gestionPresupuestoWebV2.js"></script>
 </body>
 </html>
