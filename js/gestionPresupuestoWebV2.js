@@ -18,6 +18,74 @@ class MiGasto extends HTMLElement {
         shadow.appendChild(contenidoPlantilla);
 
         this.mostrarDatos();
+        this.configurarEventos();
+    }
+
+    configurarEventos() {
+        let shadow = this.shadowRoot;
+
+        let botonBorrar = shadow.getElementById('boton-borrar');
+        botonBorrar.addEventListener('click', this.borrarGasto.bind(this));
+
+        let botonEditar = shadow.getElementById('boton-editar');
+        botonEditar.addEventListener('click', this.mostrarFormularioEdicion.bind(this));
+
+        let formularioEdicion = shadow.getElementById('formulario-edicion');
+        formularioEdicion.addEventListener('submit', this.guardarCambios.bind(this));
+
+        let botonCancelar = shadow.getElementById('boton-cancelar');
+        botonCancelar.addEventListener('click', this.ocultarFormularioEdicion.bind(this));
+    }
+
+    borrarGasto() {
+        if (confirm('¿Estás seguro de que quieres borrar este gasto?')) {
+            gestionPresupuesto.borrarGasto(this.gasto.id);
+            actualizarTotalGastos();
+            mostrarListadoGastos();
+        }
+    }
+
+    mostrarFormularioEdicion() {
+        let shadow = this.shadowRoot;
+        let formulario = shadow.getElementById('formulario-edicion');
+
+        shadow.getElementById('editar-descripcion').value = this.gasto.descripcion;
+        shadow.getElementById('editar-valor').value = this.gasto.valor;
+        shadow.getElementById('editar-fecha').value = this.gasto.obtenerPeriodoAgrupacion('dia');
+        shadow.getElementById('editar-etiquetas').value = this.gasto.etiquetas.join(', ');
+
+        formulario.hidden = false;
+    }
+
+    ocultarFormularioEdicion() {
+        let shadow = this.shadowRoot;
+        let formulario = shadow.getElementById('formulario-edicion');
+        formulario.hidden = true;
+    }
+
+    guardarCambios(evento) {
+        evento.preventDefault();
+
+        let shadow = this.shadowRoot;
+
+        let nuevaDescripcion = shadow.getElementById('editar-descripcion').value;
+        let nuevoValor = parseFloat(shadow.getElementById('editar-valor').value);
+        let nuevaFecha = shadow.getElementById('editar-fecha').value;
+        let nuevasEtiquetasTexto = shadow.getElementById('editar-etiquetas').value;
+
+        this.gasto.actualizarDescripcion(nuevaDescripcion);
+        this.gasto.actualizarValor(nuevoValor);
+        this.gasto.actualizarFecha(nuevaFecha);
+
+        this.gasto.etiquetas = [];
+        let etiquetasArray = nuevasEtiquetasTexto.split(',').map(function (etiqueta) {
+            return etiqueta.trim();
+        });
+        this.gasto.anyadirEtiquetas(...etiquetasArray);
+
+        this.mostrarDatos();
+        this.ocultarFormularioEdicion();
+        actualizarTotalGastos();
     }
 
     mostrarDatos() {
@@ -104,8 +172,8 @@ function manejadorForm(evento) {
     let valor = parseFloat(document.getElementById('valor-gasto').value);
     let fecha = document.getElementById('fecha-gasto').value;
     let etiquetasTexto = document.getElementById('etiquetas-gasto').value;
-    
-    let etiquetas = etiquetasTexto.split(',').map(function(etiqueta) {
+
+    let etiquetas = etiquetasTexto.split(',').map(function (etiqueta) {
         return etiqueta.trim();
     });
 
