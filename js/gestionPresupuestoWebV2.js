@@ -114,12 +114,17 @@ class MiGasto extends HTMLElement {
 
 customElements.define('mi-gasto', MiGasto);
 
-let gastoPrueba = new gestionPresupuesto.CrearGasto('Compra de prueba', 50, '2025-11-07', 'supermercado', 'comida');
-console.log('Gasto de prueba creado:', gastoPrueba);
-console.log('Descripción:', gastoPrueba.descripcion);
-console.log('Valor:', gastoPrueba.valor);
-console.log('Fecha:', new Date(gastoPrueba.fecha).toLocaleDateString());
-console.log('Etiquetas:', gastoPrueba.etiquetas);
+function mostrarListadoGastos() {
+    divListadoGastos.innerHTML = '';
+    
+    let gastos = gestionPresupuesto.listarGastos();
+    
+    for (let gasto of gastos) {
+        let elementoGasto = document.createElement('mi-gasto');
+        elementoGasto.gasto = gasto;
+        divListadoGastos.appendChild(elementoGasto);
+    }
+}
 
 function crearFormulario() {
     let formulario = document.createElement('form');
@@ -182,6 +187,7 @@ function manejadorForm(evento) {
     evento.target.reset();
 
     actualizarTotalGastos();
+    mostrarListadoGastos();
 }
 
 function actualizarTotalGastos() {
@@ -189,5 +195,10 @@ function actualizarTotalGastos() {
     divTotalGastos.textContent = total.toFixed(2) + ' €';
 }
 
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Gasolina', 45.50, '2025-11-07', 'transporte', 'coche'));
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Pizzería', 32, '2025-11-06', 'comida', 'ocio'));
+gestionPresupuesto.anyadirGasto(new gestionPresupuesto.CrearGasto('Luz', 78.90, '2025-11-01', 'casa', 'energía'));
+
 crearFormulario();
 actualizarTotalGastos();
+mostrarListadoGastos();
