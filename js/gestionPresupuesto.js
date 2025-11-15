@@ -269,6 +269,27 @@ function agruparGastos(periodo = "mes", etiquetas = [], fechaDesde, fechaHasta) 
     }, {});
 }
 
+// Función para sobrescribir completamente el listado de gastos.
+// Recibe un array de objetos planos (recuperados de localStorage) y los reconstruye como instancias de CrearGasto.
+// Reinicia el array de gastos y el contador de ids, sustituyendo cualquier gasto existente.
+function sobrescribirGastos(nuevosGastos) {
+    // Vaciamos el array de gastos y reiniciamos el contador de ids a 0
+    gastos = [];
+    idGasto = 0;
+
+    // Si no se recibe un array válido o está vacío, la lista quedará vacía
+    if (!nuevosGastos || nuevosGastos.length === 0) return;
+
+    // Recorremos cada objeto plano del array recibido y lo reconstruimos como instancia de CrearGasto
+    // El constructor de CrearGasto ya se encarga de validar y procesar los datos (descripcion, valor, fecha, etiquetas)
+    for (let i = 0; i < nuevosGastos.length; i++) {
+        let datosGasto = nuevosGastos[i];
+        // Creamos la instancia con los datos del objeto plano y la añadimos con anyadirGasto
+        // que asignará el id automáticamente
+        anyadirGasto(new CrearGasto(datosGasto.descripcion, datosGasto.valor, datosGasto.fecha, ...datosGasto.etiquetas));
+    }
+}
+
 
 // Exportación de funciones
 export {
@@ -281,5 +302,6 @@ export {
     calcularTotalGastos,
     calcularBalance,
     filtrarGastos,
-    agruparGastos
+    agruparGastos,
+    sobrescribirGastos
 }
