@@ -1,12 +1,9 @@
-// TODO: Variables globales
 let presupuesto = 0;
 let gastos = [];
 let idGasto = 0;
 
-// TODO: Funciones adicionales
 
 function actualizarPresupuesto(valor) {
-    // Comprobamos que valor es de tipo number, es >= 0 y no es NaN (que sería tipo number)
     if (typeof valor === 'number' && valor >= 0 && !isNaN(valor)) {
         presupuesto = valor;
         return presupuesto;
@@ -17,33 +14,27 @@ function actualizarPresupuesto(valor) {
 }
 
 function mostrarPresupuesto() {
-    // Muestra el presupuesto devuelto por la función actualizarPresupuesto
     return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
 class CrearGasto {
     constructor(descripcion, valor, fecha, ...etiquetas) {
-        // Convertimos la descripción a cadena
         this.descripcion = String(descripcion);
 
-        // Validamos que el valor sea un número >= 0
         if (typeof valor === 'number' && valor >= 0 && !isNaN(valor)) {
             this.valor = valor;
         } else {
             this.valor = 0;
         }
 
-        // Array vacío de etiquetas
         this.etiquetas = [];
 
-        // Procesamos la fecha
         if (fecha && !isNaN(Date.parse(fecha))) {
             this.fecha = Date.parse(fecha);
         } else {
             this.fecha = Date.now();
         }
 
-        // Añadimos las etiquetas al array
         for (let etiqueta of etiquetas) {
             this.anyadirEtiquetas(etiqueta);
         }
@@ -58,14 +49,12 @@ class CrearGasto {
     }
 
     actualizarValor(nuevoValor) {
-        // Solo actualizamos si el valor es válido
         if (typeof nuevoValor === 'number' && nuevoValor >= 0 && !isNaN(nuevoValor)) {
             this.valor = nuevoValor;
         }
     }
 
     actualizarFecha(nuevaFecha) {
-        // Validamos que la fecha sea válida
         let timestamp = Date.parse(nuevaFecha);
         if (!isNaN(timestamp)) {
             this.fecha = timestamp;
@@ -73,11 +62,9 @@ class CrearGasto {
     }
 
     anyadirEtiquetas(...etiquetas) {
-        // Recorremos las etiquetas y convertimos a String
         for (let i = 0; i < etiquetas.length; i++) {
             let etiquetaString = String(etiquetas[i]);
 
-            // Añadimos si no existe
             if (!this.etiquetas.includes(etiquetaString)) {
                 this.etiquetas.push(etiquetaString);
             }
@@ -85,7 +72,6 @@ class CrearGasto {
     }
 
     borrarEtiquetas(...etiquetas) {
-        // Recorre el array y si la etiqueta existe, la elimina
         for (let i = 0; i < etiquetas.length; i++) {
 
             let etiquetaString = String(etiquetas[i]);
@@ -126,23 +112,18 @@ class CrearGasto {
 }
 
 function listarGastos() {
-    // Devuelve el listado de gastos
     return gastos;
 }
 
 function anyadirGasto(gasto) {
-    // Asignamos el id al gasto
     gasto.id = idGasto;
 
-    // Incrementamos el idGasto para el próximo gasto
     idGasto++;
 
-    // Añadimos el gasto al array
     gastos.push(gasto);
 }
 
 function borrarGasto(id) {
-    // Buscamos el gasto con el id proporcionado
     for (let i = 0; i < gastos.length; i++) {
         if (gastos[i].id === id) {
             gastos.splice(i, 1);
@@ -152,7 +133,6 @@ function borrarGasto(id) {
 }
 
 function calcularTotalGastos() {
-    // Recorremos el array de gastos y sumamos sus valores
     let total = 0;
 
     for (let i = 0; i < gastos.length; i++) {
@@ -162,13 +142,11 @@ function calcularTotalGastos() {
 }
 
 function calcularBalance() {
-    // Devuelve el presupuesto menos los gastos
     let gastosTotales = calcularTotalGastos();
     return presupuesto - gastosTotales;
 }
 
 function filtrarGastos(filtros) {
-    // Utilizamos filter para devolver solo los gastos que cumplan todos los criterios
     return gastos.filter(function (gasto) {
         if (filtros.fechaDesde) {
             let fechaDesde = Date.parse(filtros.fechaDesde);
@@ -184,7 +162,6 @@ function filtrarGastos(filtros) {
             }
         }
 
-        // Usamos undefined, ya que 0 es un valor válido
         if (filtros.valorMinimo !== undefined) {
             if (gasto.valor < filtros.valorMinimo) {
                 return false;
@@ -223,7 +200,6 @@ function filtrarGastos(filtros) {
             }
         }
 
-        // Si pasa todos los filtros, devolvemos true
         return true;
     });
 }
@@ -269,29 +245,19 @@ function agruparGastos(periodo = "mes", etiquetas = [], fechaDesde, fechaHasta) 
     }, {});
 }
 
-// Función para sobrescribir completamente el listado de gastos.
-// Recibe un array de objetos planos (recuperados de localStorage) y los reconstruye como instancias de CrearGasto.
-// Reinicia el array de gastos y el contador de ids, sustituyendo cualquier gasto existente.
 function sobrescribirGastos(nuevosGastos) {
-    // Vaciamos el array de gastos y reiniciamos el contador de ids a 0
     gastos = [];
     idGasto = 0;
 
-    // Si no se recibe un array válido o está vacío, la lista quedará vacía
     if (!nuevosGastos || nuevosGastos.length === 0) return;
 
-    // Recorremos cada objeto plano del array recibido y lo reconstruimos como instancia de CrearGasto
-    // El constructor de CrearGasto ya se encarga de validar y procesar los datos (descripcion, valor, fecha, etiquetas)
     for (let i = 0; i < nuevosGastos.length; i++) {
         let datosGasto = nuevosGastos[i];
-        // Creamos la instancia con los datos del objeto plano y la añadimos con anyadirGasto
-        // que asignará el id automáticamente
         anyadirGasto(new CrearGasto(datosGasto.descripcion, datosGasto.valor, datosGasto.fecha, ...datosGasto.etiquetas));
     }
 }
 
 
-// Exportación de funciones
 export {
     mostrarPresupuesto,
     actualizarPresupuesto,

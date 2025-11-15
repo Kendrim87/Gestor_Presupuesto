@@ -114,76 +114,55 @@ class MiGasto extends HTMLElement {
 
 customElements.define('mi-gasto', MiGasto);
 
-// Creamos el botón para guardar el listado actual en el almacenamiento local del navegador
 let botonGuardarListado = document.createElement('button');
 botonGuardarListado.type = 'button';
 botonGuardarListado.id = 'guardar-listado';
 botonGuardarListado.textContent = 'Guardar listado en localStorage';
 
-// Creamos el botón para cargar un listado previamente guardado desde el almacenamiento local
 let botonCargarListado = document.createElement('button');
 botonCargarListado.type = 'button';
 botonCargarListado.id = 'cargar-listado';
 botonCargarListado.textContent = 'Cargar listado desde localStorage';
 
-// Creamos un contenedor div para los botones y los insertamos en él
 let cargar_guardar_botones = document.createElement('div');
 cargar_guardar_botones.style.marginTop = '10px';
 cargar_guardar_botones.append(botonGuardarListado, botonCargarListado);
 
-// Insertamos el contenedor de botones justo después del formulario de gastos
-// Usamos .after() para añadirlo al DOM sin modificar el archivo index.html
 if (divFormularioGasto && divFormularioGasto.parentNode) {
     divFormularioGasto.after(cargar_guardar_botones);
 }
 
-// FUNCIÓN PARA GUARDAR EL LISTADO EN LOCALSTORAGE
-// Esta función obtiene todos los gastos actuales y los guarda en formato JSON
 function guardarListadoLocal() {
-    // Obtenemos el listado actual de gastos usando la función de gestiónPresupuesto
     let gastos = gestionPresupuesto.listarGastos();
     
-    // Creamos un array que contendrá los objetos en formato para JSON
     let gastosParaGuardar = [];
     
-    // Recorremos cada gasto y creamos un objeto con sus propiedades
     for (let i = 0; i < gastos.length; i++) {
         let gastoActual = gastos[i];
         gastosParaGuardar.push({
             descripcion: gastoActual.descripcion,
             valor: gastoActual.valor,
-            // Convertimos la fecha a formato ISO string para JSON
             fecha: new Date(gastoActual.fecha).toISOString(),
             etiquetas: gastoActual.etiquetas
         });
     }
 
-    // Guardamos el array como string JSON en localStorage
     localStorage.setItem("lista_gastos_local", JSON.stringify(gastosParaGuardar));
 }
 
-// FUNCIÓN PARA CARGAR EL LISTADO DESDE LOCALSTORAGE
-// Esta función recupera los gastos guardados y los reconstruye como objetos funcionales
 function cargarListadoLocal() {
-    // Leemos el contenido de la clave "lista_gastos_local" del almacenamiento local
     let datosGuardados = localStorage.getItem("lista_gastos_local");
     
-    // Si no existe la clave, terminamos sin hacer nada
     if (!datosGuardados) return;
 
-    // Convertimos el string JSON a un array de objetos
     let gastosRecuperados = JSON.parse(datosGuardados);
 
-    // Delegamos la reconstrucción a la lógica de negocio
-    // sobrescribirGastos vacía el listado, reinicia los ids y reconstruye los gastos como instancias de CrearGasto
     gestionPresupuesto.sobrescribirGastos(gastosRecuperados);
 
-    // Actualizamos la interfaz: recalculamos el total y mostramos el listado
     actualizarTotalGastos();
     mostrarListadoGastos();
 }
 
-// Enlazamos los botones con sus funciones correspondientes usando event listeners
 botonGuardarListado.addEventListener('click', guardarListadoLocal);
 botonCargarListado.addEventListener('click', cargarListadoLocal);
 
