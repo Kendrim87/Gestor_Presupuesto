@@ -134,9 +134,9 @@ if (divFormularioGasto && divFormularioGasto.parentNode) {
 
 function guardarListadoLocal() {
     let gastos = gestionPresupuesto.listarGastos();
-    
+
     let gastosParaGuardar = [];
-    
+
     for (let i = 0; i < gastos.length; i++) {
         let gastoActual = gastos[i];
         gastosParaGuardar.push({
@@ -152,7 +152,7 @@ function guardarListadoLocal() {
 
 function cargarListadoLocal() {
     let datosGuardados = localStorage.getItem("lista_gastos_local");
-    
+
     if (!datosGuardados) return;
 
     let gastosRecuperados = JSON.parse(datosGuardados);
@@ -168,9 +168,9 @@ botonCargarListado.addEventListener('click', cargarListadoLocal);
 
 function mostrarListadoGastos() {
     divListadoGastos.innerHTML = '';
-    
+
     let gastos = gestionPresupuesto.listarGastos();
-    
+
     for (let gasto of gastos) {
         let elementoGasto = document.createElement('mi-gasto');
         elementoGasto.gasto = gasto;
